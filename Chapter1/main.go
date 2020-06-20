@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-type gUser struct {
+type User struct {
 	ID uint64 `json:"id"`
 	Name string `json:"name"`
 	WeChat string `json:"weChat"`
