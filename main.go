@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/i-coder-robot/gin-demo/config"
 	"github.com/spf13/viper"
 	"net/http"
 )
@@ -26,9 +25,7 @@ func Cors() gin.HandlerFunc{
 }
 
 func main() {
-	if err := config.Init("config"); err != nil {
-		panic(err)
-	}
+
 
 	r:=gin.Default()
 	r.Use(Cors())
@@ -58,7 +55,7 @@ func main() {
 		order.POST("/delete",OrderHandler.DeleteOrderHandler)
 	}
 
-	product := r.Group("/v1/category")
+	product := r.Group("/v1/product")
 	{
 		product.GET("/list",ProductHandler.ProductListHandler)
 		product.POST("/add",ProductHandler.AddProductHandler)
@@ -66,7 +63,7 @@ func main() {
 		product.POST("/delete",ProductHandler.DeleteProductHandler)
 	}
 
-	user := r.Group("/v1/category")
+	user := r.Group("/v1/user")
 	{
 		user.GET("/list",UserHandler.UserListHandler)
 		user.POST("/add",UserHandler.AddUserHandler)

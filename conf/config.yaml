@@ -4,6 +4,6 @@ url: http://127.0.0.1:9090
 max_check_count: 10
 database:
   name: happy_mall
-  addr: 127.0.0.1:3306
+  host: 127.0.0.1:3306
   username: root
   password: smartwell

@@ -73,7 +73,6 @@ func (repo *UserRepository) Add(user *model.User) (*model.User, error) {
 	}
 	err := repo.DB.Create(user).Error
 	if err != nil {
-
 		return user, fmt.Errorf("用户注册失败")
 	}
 	return user, nil

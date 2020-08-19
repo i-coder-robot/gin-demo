@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/i-coder-robot/gin-demo/config"
 	"github.com/i-coder-robot/gin-demo/handler"
 	"github.com/i-coder-robot/gin-demo/model"
 	"github.com/i-coder-robot/gin-demo/repository"
@@ -20,25 +22,39 @@ var (
 	UserHandler     handler.UserHandler
 )
 
-func Init() {
+func initViper(){
+	if err := config.Init(""); err != nil {
+		panic(err)
+	}
+}
 
+func initDB()  {
 	fmt.Println("数据库 init")
 	var err error
 	conf := &model.DBConf{
-		Driver:   viper.GetString("DB_DRIVER"),
-		Host:     viper.GetString("DB_HOST"),
-		Port:     viper.GetString("DB_PORT"),
-		User:     viper.GetString("DB_USER"),
-		Password: viper.GetString("DB_PASSWORD"),
-		DbName:   viper.GetString("DB_NAME"),
-		Charset:  viper.GetString("DB_CHARSET"),
+		Host:     viper.GetString("database.host"),
+		User:     viper.GetString("database.username"),
+		Password: viper.GetString("database.password"),
+		DbName:   viper.GetString("database.name"),
 	}
-	DB, err = gorm.Open("mysql", conf)
+
+	config := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true&charset=utf8&parseTime=%t&loc=%s",
+		conf.User,
+		conf.Password,
+		conf.Host,
+		conf.DbName,
+		true,
+		"Local")
+
+	DB, err = gorm.Open("mysql", config)
 	if err != nil {
 		log.Fatalf("connect error: %v\n", err)
 	}
+	DB.SingularTable(true)
 	fmt.Println("数据库 init 结束...")
+}
 
+func initHandler(){
 	BannerHandler = handler.BannerHandler{
 		BannerSrv: &service.BannerService{
 			Repo: &repository.BannerRepository{
@@ -74,7 +90,12 @@ func Init() {
 				DB: DB,
 			},
 		}}
+}
 
+func init() {
+	initViper()
+	initDB()
+	initHandler()
 }
 
 //config := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true&charset=utf8&parseTime=%t&loc=%s",
