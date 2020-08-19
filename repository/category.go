@@ -80,11 +80,11 @@ func (repo *CategoryRepository) Add(category *model.Category) (*model.Category, 
 }
 
 func (repo *CategoryRepository) Edit(category model.Category) (bool, error) {
-	if category.ID == "" {
+	if category.CategoryID == "" {
 		return false, fmt.Errorf("请传入更新 ID")
 	}
 	id := &model.Category{
-		ID: category.ID,
+		CategoryID: category.CategoryID,
 	}
 	err := repo.DB.Model(id).Update(category).Error
 	if err != nil {
@@ -94,7 +94,7 @@ func (repo *CategoryRepository) Edit(category model.Category) (bool, error) {
 }
 
 func (repo *CategoryRepository) Delete(id string) (bool, error) {
-	temp := &model.Category{ID: id}
+	temp := &model.Category{CategoryID: id}
 	err := repo.DB.Delete(temp).Error
 	if err != nil {
 		return false, err
