@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/i-coder-robot/gin-demo/config"
+	"github.com/spf13/viper"
 	"net/http"
 )
 
@@ -24,16 +26,58 @@ func Cors() gin.HandlerFunc{
 }
 
 func main() {
-	//users:=[]User{{ID:123,Name:"张三丰"},{ID:456,Name:"张无忌"}}
+	if err := config.Init("config"); err != nil {
+		panic(err)
+	}
+
 	r:=gin.Default()
 	r.Use(Cors())
+	gin.SetMode(viper.GetString("mode"))
 
-	r.GET("/api/category_list",CategoryListHandler)
-	r.POST("api/add_category",AddCategoryHandler)
-	r.POST("api/edit_category",EditCategoryHandler)
-	r.POST("api/delete_category",DeleteCategoryHandler)
+	banner := r.Group("/v1/banner")
+	{
+		banner.GET("/list",BannerHandler.BannerListHandler)
+		banner.POST("/add",BannerHandler.AddBannerHandler)
+		banner.POST("/edit",BannerHandler.EditBannerHandler)
+		banner.POST("/delete",BannerHandler.DeleteBannerHandler)
+	}
 
-	r.Run(":8889")
+	category := r.Group("/v1/category")
+	{
+		category.GET("/list",CategoryHandler.CategoryListHandler)
+		category.POST("/add",CategoryHandler.AddCategoryHandler)
+		category.POST("/edit",CategoryHandler.EditCategoryHandler)
+		category.POST("/delete",CategoryHandler.DeleteCategoryHandler)
+	}
+
+	order := r.Group("/v1/order")
+	{
+		order.GET("/list",OrderHandler.OrderListHandler)
+		order.POST("/add",OrderHandler.AddOrderHandler)
+		order.POST("/edit",OrderHandler.EditOrderHandler)
+		order.POST("/delete",OrderHandler.DeleteOrderHandler)
+	}
+
+	product := r.Group("/v1/category")
+	{
+		product.GET("/list",ProductHandler.ProductListHandler)
+		product.POST("/add",ProductHandler.AddProductHandler)
+		product.POST("/edit",ProductHandler.EditProductHandler)
+		product.POST("/delete",ProductHandler.DeleteProductHandler)
+	}
+
+	user := r.Group("/v1/category")
+	{
+		user.GET("/list",UserHandler.UserListHandler)
+		user.POST("/add",UserHandler.AddUserHandler)
+		user.POST("/edit",UserHandler.EditUserHandler)
+		user.POST("/delete",UserHandler.DeleteUserHandler)
+	}
+
+
+	port:=viper.GetString("port")
+
+	r.Run(port)
 
 	//r.GET("/", func(c *gin.Context) {
 	//	c.JSON(http.StatusOK,gin.H{

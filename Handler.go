@@ -1,66 +1,88 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"fmt"
+	"github.com/i-coder-robot/gin-demo/handler"
 	"github.com/i-coder-robot/gin-demo/model"
-	uuid "github.com/satori/go.uuid"
-	"net/http"
+	"github.com/i-coder-robot/gin-demo/repository"
+	"github.com/i-coder-robot/gin-demo/service"
+	"github.com/jinzhu/gorm"
+	"github.com/spf13/viper"
+	"log"
 )
 
-func CategoryListHandler(c *gin.Context) {
+var (
+	DB              *gorm.DB
+	BannerHandler   handler.BannerHandler
+	CategoryHandler handler.CategoryHandler
+	OrderHandler    handler.OrderHandler
+	ProductHandler  handler.ProductHandler
+	UserHandler     handler.UserHandler
+)
 
-	var firstCategories []*model.Category
-	var secondCategories []*model.Category
-	var thirdCategories []*model.Category
+func Init() {
 
-	c31 := &model.Category{
-		ID:       uuid.NewV4().String(),
-		Name:     "苹果",
-		Desc:     "",
-		Children: nil,
+	fmt.Println("数据库 init")
+	var err error
+	conf := &model.DBConf{
+		Driver:   viper.GetString("DB_DRIVER"),
+		Host:     viper.GetString("DB_HOST"),
+		Port:     viper.GetString("DB_PORT"),
+		User:     viper.GetString("DB_USER"),
+		Password: viper.GetString("DB_PASSWORD"),
+		DbName:   viper.GetString("DB_NAME"),
+		Charset:  viper.GetString("DB_CHARSET"),
 	}
-	c32 := &model.Category{
-		ID:       uuid.NewV4().String(),
-		Name:     "橙子",
-		Desc:     "",
-		Children: nil,
-	}
-	thirdCategories = append(thirdCategories, c31)
-	thirdCategories = append(thirdCategories, c32)
-	c21 := &model.Category{
-		ID:       uuid.NewV4().String(),
-		Name:     "热销水果",
-		Desc:     "",
-		Children: thirdCategories,
-	}
-	secondCategories = append(secondCategories, c21)
-
-	category := &model.Category{
-		ID:       uuid.NewV4().String(),
-		Name:     "新鲜水果",
-		Desc:     "草莓 | 水蜜桃 | 车厘子",
-		Order:    200,
-		Children: secondCategories,
-	}
-	firstCategories = append(firstCategories, category)
-	c.JSON(http.StatusOK, gin.H{"category_list": firstCategories})
-}
-
-func AddCategoryHandler(c *gin.Context)  {
-	var category model.Category
-	err := c.BindJSON(&category)
+	DB, err = gorm.Open("mysql", conf)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError,gin.H{})
+		log.Fatalf("connect error: %v\n", err)
+	}
+	fmt.Println("数据库 init 结束...")
+
+	BannerHandler = handler.BannerHandler{
+		BannerSrv: &service.BannerService{
+			Repo: &repository.BannerRepository{
+				DB: DB,
+			},
+		}}
+
+	CategoryHandler = handler.CategoryHandler{
+		CategorySrv: &service.CategoryService{
+			Repo: &repository.CategoryRepository{
+				DB: DB,
+			},
+		},
 	}
 
+	OrderHandler = handler.OrderHandler{
+		OrderSrv: &service.OrderService{
+			Repo: &repository.OrderRepository{
+				DB: DB,
+			},
+		}}
 
+	ProductHandler = handler.ProductHandler{
+		ProductSrv: &service.ProductService{
+			Repo: &repository.ProductRepository{
+				DB: DB,
+			},
+		}}
+
+	UserHandler = handler.UserHandler{
+		UserSrv: &service.UserService{
+			Repo: &repository.UserRepository{
+				DB: DB,
+			},
+		}}
 
 }
 
-func EditCategoryHandler(c *gin.Context)  {
-
-}
-
-func DeleteCategoryHandler(c *gin.Context)  {
-
-}
+//config := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true&charset=utf8&parseTime=%t&loc=%s",
+//username,
+//password,
+//addr,
+//name,
+//true,
+//"Local")
+//
+//db, err := gorm.Open("mysql", config)
