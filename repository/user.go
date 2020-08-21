@@ -80,7 +80,7 @@ func (repo *UserRepository) ExistByMobile(mobile string) *model.User{
 func (repo *UserRepository) ExistByUserID(id string) *model.User {
 	var count int
 	var user model.User
-	repo.DB.Find(&user).Where("user_id = ?", id)
+	repo.DB.Find(&user).Where("user_id = ?", id).Count(&count)
 	if count > 0 {
 		return &user
 	}

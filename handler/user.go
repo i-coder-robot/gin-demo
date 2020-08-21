@@ -16,9 +16,17 @@ type UserHandler struct {
 
 func (h *UserHandler) UserListHandler(c *gin.Context) {
 	var q query.ListQuery
+	entity := resp.Entity{
+		Code:      int(enum.Operate_Fail),
+		Msg:       enum.Operate_Fail.String(),
+		Total:     0,
+		TotalPage: 1,
+		Data:      nil,
+	}
 	err := c.ShouldBindQuery(&q)
 	if err != nil {
-		panic(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"entity": entity})
+		return
 	}
 	list, err := h.UserSrv.List(&q)
 	total, err := h.UserSrv.GetTotal(&q)
@@ -38,7 +46,7 @@ func (h *UserHandler) UserListHandler(c *gin.Context) {
 		totalPage = ret2 + 1
 	}
 
-	entity := resp.Entity{
+	entity = resp.Entity{
 		Code:      http.StatusOK,
 		Msg:       "OK",
 		Total:     total,
@@ -108,6 +116,7 @@ func (h *UserHandler) DeleteUserHandler(c *gin.Context) {
 	}
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{"entity": entity})
+		return
 	}
 	if b {
 		entity.Code = int(enum.Operate_OK)
