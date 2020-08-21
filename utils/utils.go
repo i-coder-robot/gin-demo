@@ -1,6 +1,11 @@
 package utils
 
-import "time"
+import (
+	"crypto/md5"
+	"fmt"
+	"io"
+	time "time"
+)
 
 // Page 分页
 func Page(Limit, Page int64) (limit, offset int64) {
@@ -9,7 +14,7 @@ func Page(Limit, Page int64) (limit, offset int64) {
 	} else {
 		limit = 10
 	}
-	if Page > 1 {
+	if Page > 0 {
 		offset = (Page - 1) * limit
 	} else {
 		offset = -1
@@ -37,4 +42,21 @@ var (
 func GetNow() string{
 	now:=time.Now().In(Local).Format(TimeLayout)
 	return now
+}
+
+func TimeFormat(s string) string {
+	result, err := time.ParseInLocation(TimeLayout, s, time.Local)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(result)
+	return result.In(Local).Format(TimeLayout)
+
+}
+
+func Md5(str string) string {
+	w := md5.New()
+	io.WriteString(w, str)
+	md5str := fmt.Sprintf("%x", w.Sum(nil))
+	return md5str
 }

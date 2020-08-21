@@ -31,7 +31,7 @@ func main() {
 	r.Use(Cors())
 	gin.SetMode(viper.GetString("mode"))
 
-	banner := r.Group("/v1/banner")
+	banner := r.Group("/api/banner")
 	{
 		banner.GET("/list",BannerHandler.BannerListHandler)
 		banner.POST("/add",BannerHandler.AddBannerHandler)
@@ -39,7 +39,7 @@ func main() {
 		banner.POST("/delete",BannerHandler.DeleteBannerHandler)
 	}
 
-	category := r.Group("/v1/category")
+	category := r.Group("/api/category")
 	{
 		category.GET("/list",CategoryHandler.CategoryListHandler)
 		category.POST("/add",CategoryHandler.AddCategoryHandler)
@@ -47,7 +47,7 @@ func main() {
 		category.POST("/delete",CategoryHandler.DeleteCategoryHandler)
 	}
 
-	order := r.Group("/v1/order")
+	order := r.Group("/api/order")
 	{
 		order.GET("/list",OrderHandler.OrderListHandler)
 		order.POST("/add",OrderHandler.AddOrderHandler)
@@ -55,7 +55,7 @@ func main() {
 		order.POST("/delete",OrderHandler.DeleteOrderHandler)
 	}
 
-	product := r.Group("/v1/product")
+	product := r.Group("/api/product")
 	{
 		product.GET("/list",ProductHandler.ProductListHandler)
 		product.POST("/add",ProductHandler.AddProductHandler)
@@ -63,12 +63,12 @@ func main() {
 		product.POST("/delete",ProductHandler.DeleteProductHandler)
 	}
 
-	user := r.Group("/v1/user")
+	user := r.Group("/api/user")
 	{
 		user.GET("/list",UserHandler.UserListHandler)
 		user.POST("/add",UserHandler.AddUserHandler)
 		user.POST("/edit",UserHandler.EditUserHandler)
-		user.POST("/delete",UserHandler.DeleteUserHandler)
+		user.POST("/delete/:id",UserHandler.DeleteUserHandler)
 	}
 
 

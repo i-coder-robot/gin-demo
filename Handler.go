@@ -97,13 +97,3 @@ func init() {
 	initDB()
 	initHandler()
 }
-
-//config := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true&charset=utf8&parseTime=%t&loc=%s",
-//username,
-//password,
-//addr,
-//name,
-//true,
-//"Local")
-//
-//db, err := gorm.Open("mysql", config)
