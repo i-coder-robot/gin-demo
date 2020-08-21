@@ -15,7 +15,7 @@ type UserRepository struct {
 type UserRepoInterface interface {
 	List(req *query.ListQuery) (users []*model.User, err error)
 	GetTotal(req *query.ListQuery) (total int64, err error)
-	Get(user *model.User) (*model.User, error)
+	Get(user model.User) (*model.User, error)
 	Exist(user model.User) *model.User
 	ExistByUserID(id string) *model.User
 	ExistByMobile(mobile string) *model.User
@@ -51,11 +51,11 @@ func (repo *UserRepository) GetTotal(req *query.ListQuery) (total int64, err err
 	return total, nil
 }
 
-func (repo *UserRepository) Get(user *model.User) (*model.User, error) {
+func (repo *UserRepository) Get(user model.User) (*model.User, error) {
 	if err := repo.DB.Where(&user).Find(&user).Error; err != nil {
 		return nil, err
 	}
-	return user, nil
+	return &user, nil
 }
 
 func (repo *UserRepository) Exist(user model.User) *model.User {

@@ -66,6 +66,7 @@ func main() {
 	user := r.Group("/api/user")
 	{
 		user.GET("/list",UserHandler.UserListHandler)
+		user.GET("/info/:id",UserHandler.UserInfoHandler)
 		user.POST("/add",UserHandler.AddUserHandler)
 		user.POST("/edit",UserHandler.EditUserHandler)
 		user.POST("/delete/:id",UserHandler.DeleteUserHandler)

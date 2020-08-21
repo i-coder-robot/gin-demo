@@ -14,6 +14,39 @@ type UserHandler struct {
 	UserSrv service.UserSrv
 }
 
+func (h *UserHandler) UserInfoHandler(c *gin.Context) {
+	entity := resp.Entity{
+		Code:      int(enum.Operate_Fail),
+		Msg:       enum.Operate_Fail.String(),
+		Total:     0,
+		TotalPage: 1,
+		Data:      nil,
+	}
+	userId := c.Param("id")
+	if userId == "" {
+		c.JSON(http.StatusInternalServerError, gin.H{"entity": entity})
+		return
+	}
+	u := model.User{
+		UserId: userId,
+	}
+	result, err := h.UserSrv.Get(u)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"entity": entity})
+		return
+	}
+
+	entity = resp.Entity{
+		Code:      http.StatusOK,
+		Msg:       "OK",
+		Total:     0,
+		TotalPage: 0,
+		Data:      result,
+	}
+	c.JSON(http.StatusOK, gin.H{"entity": entity})
+}
+
 func (h *UserHandler) UserListHandler(c *gin.Context) {
 	var q query.ListQuery
 	entity := resp.Entity{
