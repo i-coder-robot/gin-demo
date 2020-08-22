@@ -13,17 +13,18 @@ type OrderRepository struct {
 }
 
 type OrderRepoInterface interface {
-	List(req query.ListQuery) (orders []*model.Order, err error)
-	GetTotal(req *query.ListQuery) (total int, err error)
-	Get(order *model.Order) (*model.Order, error)
-	Exist(order *model.Order) bool
-	Add(order *model.Order) (*model.Order, error)
-	Edit(order model.Order) (bool, error)
-	Delete(id string) (bool, error)
+	List(req *query.ListQuery) (Orders []*model.Order, err error)
+	GetTotal(req *query.ListQuery) (total int64, err error)
+	Get(Order model.Order) (*model.Order, error)
+	Exist(Order model.Order) *model.Order
+	ExistByOrderID(id string) *model.Order
+	Add(Order model.Order) (*model.Order, error)
+	Edit(Order model.Order) (bool, error)
+	Delete(u model.Order) (bool, error)
 }
 
 
-func (repo *OrderRepository) List(req query.ListQuery) (order []*model.Order, err error) {
+func (repo *OrderRepository) List(req *query.ListQuery) (order []*model.Order, err error) {
 	fmt.Println(req)
 	db := repo.DB
 	limit, offset := utils.Page(req.Limit, req.Page) // 分页
@@ -38,7 +39,7 @@ func (repo *OrderRepository) List(req query.ListQuery) (order []*model.Order, er
 	return order, nil
 }
 
-func (repo *OrderRepository) GetTotal(req *query.ListQuery) (total int, err error) {
+func (repo *OrderRepository) GetTotal(req *query.ListQuery) (total int64, err error) {
 	var orders []model.Order
 	db := repo.DB
 	if req.Where != "" {
@@ -50,34 +51,33 @@ func (repo *OrderRepository) GetTotal(req *query.ListQuery) (total int, err erro
 	return total, nil
 }
 
-func (repo *OrderRepository) Get(order *model.Order) (*model.Order, error) {
+func (repo *OrderRepository) Get(order model.Order) (*model.Order, error) {
 	if err := repo.DB.Where(&order).Find(&order).Error; err != nil {
 		return nil, err
 	}
-	return order, nil
+	return &order, nil
 }
 
-func (repo *OrderRepository) Exist(order *model.Order) bool {
-	var count int
+func (repo *OrderRepository) Exist(order model.Order) *model.Order {
 	if order.OrderId != "" {
-		repo.DB.Model(&order).Where("order_id= ?", order.OrderId).Count(&count)
-		if count > 0 {
-			return true
-		}
+		repo.DB.Model(&order).Where("order_id= ?", order.OrderId)
+		return &order
 	}
-	return false
+	return nil
 }
 
-func (repo *OrderRepository) Add(order *model.Order) (*model.Order, error) {
-	if exist := repo.Exist(order); exist == true {
-		return order, fmt.Errorf("用户注册已存在")
-	}
+func (repo *OrderRepository) ExistByOrderID(id string) *model.Order{
+	var order model.Order
+	repo.DB.Where("order_id = ?", id).First(&order)
+	return &order
+}
+
+func (repo *OrderRepository) Add(order model.Order) (*model.Order, error) {
 	err := repo.DB.Create(order).Error
 	if err != nil {
-
-		return order, fmt.Errorf("用户注册失败")
+		return &order, fmt.Errorf("订单添加失败")
 	}
-	return order, nil
+	return &order, nil
 }
 
 func (repo *OrderRepository) Edit(order model.Order) (bool, error) {
@@ -94,9 +94,8 @@ func (repo *OrderRepository) Edit(order model.Order) (bool, error) {
 	return true, nil
 }
 
-func (repo *OrderRepository) Delete(id string) (bool, error) {
-	temp := &model.Order{OrderId: id}
-	err := repo.DB.Delete(temp).Error
+func (repo *OrderRepository) Delete(o model.Order) (bool, error) {
+	err := repo.DB.Model(&o).Where("order_id=?",o.OrderId).Update("is_deleted",o.IsDeleted).Error
 	if err != nil {
 		return false, err
 	}

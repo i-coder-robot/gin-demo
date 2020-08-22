@@ -13,17 +13,17 @@ type ProductRepository struct {
 }
 
 type ProductRepoInterface interface {
-	List(req query.ListQuery) (products []*model.Product, err error)
-	GetTotal(req *query.ListQuery) (total int, err error)
-	Get(product *model.Product) (*model.Product, error)
-	Exist(product *model.Product) bool
-	Add(product *model.Product) (*model.Product, error)
-	Edit(product model.Product) (bool, error)
-	Delete(id string) (bool, error)
+	List(req *query.ListQuery) (Products []*model.Product, err error)
+	GetTotal(req *query.ListQuery) (total int64, err error)
+	Get(Product model.Product) (*model.Product, error)
+	Exist(Product model.Product) *model.Product
+	ExistByProductID(id string) *model.Product
+	Add(Product model.Product) (*model.Product, error)
+	Edit(Product model.Product) (bool, error)
+	Delete(u model.Product) (bool, error)
 }
 
-
-func (repo *ProductRepository) List(req query.ListQuery) (products []*model.Product, err error) {
+func (repo *ProductRepository) List(req *query.ListQuery) (products []*model.Product, err error) {
 	fmt.Println(req)
 	db := repo.DB
 	limit, offset := utils.Page(req.Limit, req.Page) // 分页
@@ -38,7 +38,7 @@ func (repo *ProductRepository) List(req query.ListQuery) (products []*model.Prod
 	return products, nil
 }
 
-func (repo *ProductRepository) GetTotal(req *query.ListQuery) (total int, err error) {
+func (repo *ProductRepository) GetTotal(req *query.ListQuery) (total int64, err error) {
 	var products []*model.Product
 	db := repo.DB
 	if req.Where != "" {
@@ -50,34 +50,37 @@ func (repo *ProductRepository) GetTotal(req *query.ListQuery) (total int, err er
 	return total, nil
 }
 
-func (repo *ProductRepository) Get(product *model.Product) (*model.Product, error) {
+func (repo *ProductRepository) Get(product model.Product) (*model.Product, error) {
 	if err := repo.DB.Where(&product).Find(&product).Error; err != nil {
 		return nil, err
 	}
-	return product, nil
+	return &product, nil
 }
 
-func (repo *ProductRepository) Exist(product *model.Product) bool {
-	var count int
+func (repo *ProductRepository) Exist(product model.Product) *model.Product {
 	if product.ProductName != "" {
-		repo.DB.Model(&product).Where("product_name= ?", product.ProductName).Count(&count)
-		if count > 0 {
-			return true
-		}
+		repo.DB.Model(&product).Where("product_name= ?", product.ProductName)
+		return &product
 	}
-	return false
+	return nil
 }
 
-func (repo *ProductRepository) Add(product *model.Product) (*model.Product, error) {
-	if exist := repo.Exist(product); exist == true {
-		return product, fmt.Errorf("用户注册已存在")
+func (repo *ProductRepository) ExistByProductID(id string) *model.Product {
+	var p model.Product
+	repo.DB.Where("product_id = ?", id).First(&p)
+	return &p
+}
+
+func (repo *ProductRepository) Add(product model.Product) (*model.Product, error) {
+	exist := repo.Exist(product)
+	if exist !=nil {
+		return &product, fmt.Errorf("商品已存在")
 	}
 	err := repo.DB.Create(product).Error
 	if err != nil {
-
-		return product, fmt.Errorf("用户注册失败")
+		return nil, fmt.Errorf("商品添加失败")
 	}
-	return product, nil
+	return &product, nil
 }
 
 func (repo *ProductRepository) Edit(product model.Product) (bool, error) {
@@ -94,9 +97,9 @@ func (repo *ProductRepository) Edit(product model.Product) (bool, error) {
 	return true, nil
 }
 
-func (repo *ProductRepository) Delete(id string) (bool, error) {
-	temp := &model.Product{ProductId: id}
-	err := repo.DB.Delete(temp).Error
+func (repo *ProductRepository) Delete(product model.Product) (bool, error) {
+
+	err := repo.DB.Model(&product).Where("product_id = ?", product.ProductId).Update("is_deleted", product.IsDeleted).Error
 	if err != nil {
 		return false, err
 	}

@@ -15,6 +15,7 @@ type Product struct {
 	CreateUser string `json:"createUser"`
 	UpdateUser string `json:"updateUser"`
 	ProductDetailContent string `json:"productDetailContent"`
+	IsDeleted bool `json:"isDeleted"`
 	CreateAt string `json:"createAt"`
 	UpdateAt string `json:"updateAt"`
 }
