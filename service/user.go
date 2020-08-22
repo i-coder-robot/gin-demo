@@ -65,7 +65,10 @@ func (srv *UserService) Edit(user model.User) (bool, error) {
 	if exist==nil {
 		return false, errors.New("参数错误")
 	}
-	return srv.Repo.Edit(user)
+	exist.NickName=user.NickName
+	exist.Mobile=user.Mobile
+	exist.Address=user.Address
+	return srv.Repo.Edit(*exist)
 }
 func (srv *UserService) Delete(id string) (bool, error) {
 	if id == "" {

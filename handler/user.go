@@ -120,21 +120,28 @@ func (h *UserHandler) AddUserHandler(c *gin.Context) {
 
 func (h *UserHandler) EditUserHandler(c *gin.Context) {
 	u := model.User{}
+	entity := resp.Entity{
+		Code:  int(enum.Operate_Fail),
+		Msg:   enum.Operate_Fail.String(),
+		Total: 0,
+		Data:  nil,
+	}
 	err := c.ShouldBindJSON(&u)
 	if err != nil {
-		panic(err)
+		c.JSON(http.StatusOK, gin.H{"entity": entity})
+		return
 	}
 	b, err := h.UserSrv.Edit(u)
 	if err != nil {
-		panic(err)
+		c.JSON(http.StatusOK, gin.H{"entity": entity})
+		return
 	}
-	entity := resp.Entity{
-		Code:  http.StatusOK,
-		Msg:   "OK",
-		Total: 0,
-		Data:  b,
+	if b {
+		entity.Code=int(enum.Operate_OK)
+		entity.Msg=enum.Operate_OK.String()
+		c.JSON(http.StatusOK, gin.H{"entity": entity})
 	}
-	c.JSON(http.StatusOK, gin.H{"entity": entity})
+
 }
 
 func (h *UserHandler) DeleteUserHandler(c *gin.Context) {

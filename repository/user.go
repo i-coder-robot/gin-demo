@@ -67,7 +67,7 @@ func (repo *UserRepository) Exist(user model.User) *model.User {
 	return nil
 }
 
-func (repo *UserRepository) ExistByMobile(mobile string) *model.User{
+func (repo *UserRepository) ExistByMobile(mobile string) *model.User {
 	var count int
 	var user model.User
 	repo.DB.Find(&user).Where("mobile = ?", mobile)
@@ -78,17 +78,13 @@ func (repo *UserRepository) ExistByMobile(mobile string) *model.User{
 }
 
 func (repo *UserRepository) ExistByUserID(id string) *model.User {
-	var count int
 	var user model.User
-	repo.DB.Find(&user).Where("user_id = ?", id).Count(&count)
-	if count > 0 {
-		return &user
-	}
-	return nil
+	repo.DB.Where("user_id = ?", id).First(&user)
+	return &user
 }
 
 func (repo *UserRepository) Add(user model.User) (*model.User, error) {
-	if exist := repo.Exist(user); exist !=nil {
+	if exist := repo.Exist(user); exist != nil {
 		return nil, fmt.Errorf("用户注册已存在")
 	}
 	err := repo.DB.Create(&user).Error
@@ -99,11 +95,8 @@ func (repo *UserRepository) Add(user model.User) (*model.User, error) {
 }
 
 func (repo *UserRepository) Edit(user model.User) (bool, error) {
-
-	id := &model.User{
-		UserId: user.UserId,
-	}
-	err := repo.DB.Model(id).Update(user).Error
+	err := repo.DB.Model(&user).Where("user_id=?", user.UserId).Updates(map[string]interface{}{"nick_name": user.NickName, "mobile": user.Mobile, "address": user.Address}).Error
+	//err := repo.DB.Save(&user).Error
 	if err != nil {
 		return false, err
 	}
@@ -111,7 +104,7 @@ func (repo *UserRepository) Edit(user model.User) (bool, error) {
 }
 
 func (repo *UserRepository) Delete(u model.User) (bool, error) {
-	err := repo.DB.Model(&u).Update("is_deleted",u.IsDeleted).Error
+	err := repo.DB.Model(&u).Where("user_id=?", u.UserId).Update("is_deleted", u.IsDeleted).Error
 	if err != nil {
 		return false, err
 	}
