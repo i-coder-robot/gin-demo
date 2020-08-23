@@ -14,6 +14,17 @@ type UserHandler struct {
 	UserSrv service.UserSrv
 }
 
+func (h *UserHandler) GetEntity(result model.User) resp.User{
+	return resp.User{
+		UserId :result.UserId,
+		NickName:result.NickName,
+		Mobile:result.Mobile,
+		Address:result.Address,
+		IsDeleted:result.IsDeleted,
+		IsLocked:result.IsLocked,
+	}
+}
+
 func (h *UserHandler) UserInfoHandler(c *gin.Context) {
 	entity := resp.Entity{
 		Code:      int(enum.Operate_Fail),
@@ -37,12 +48,14 @@ func (h *UserHandler) UserInfoHandler(c *gin.Context) {
 		return
 	}
 
+	r:=h.GetEntity(*result)
+
 	entity = resp.Entity{
 		Code:      http.StatusOK,
 		Msg:       "OK",
 		Total:     0,
 		TotalPage: 0,
-		Data:      result,
+		Data:      r,
 	}
 	c.JSON(http.StatusOK, gin.H{"entity": entity})
 }
@@ -78,13 +91,18 @@ func (h *UserHandler) UserListHandler(c *gin.Context) {
 	} else {
 		totalPage = ret2 + 1
 	}
+	var newList []*resp.User
+	for _,item := range(list){
+		r:=h.GetEntity(*item)
+		newList= append(newList, &r)
+	}
 
 	entity = resp.Entity{
 		Code:      http.StatusOK,
 		Msg:       "OK",
 		Total:     total,
 		TotalPage: totalPage,
-		Data:      list,
+		Data:      newList,
 	}
 	c.JSON(http.StatusOK, gin.H{"entity": entity})
 }

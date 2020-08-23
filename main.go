@@ -34,6 +34,7 @@ func main() {
 	banner := r.Group("/api/banner")
 	{
 		banner.GET("/list",BannerHandler.BannerListHandler)
+		//banner.GET("/info/:id",BannerHandler.BannerSrv)
 		banner.POST("/add",BannerHandler.AddBannerHandler)
 		banner.POST("/edit",BannerHandler.EditBannerHandler)
 		banner.POST("/delete",BannerHandler.DeleteBannerHandler)
@@ -42,6 +43,7 @@ func main() {
 	category := r.Group("/api/category")
 	{
 		category.GET("/list",CategoryHandler.CategoryListHandler)
+		category.GET("/info/:id",CategoryHandler.CategoryInfoHandler)
 		category.POST("/add",CategoryHandler.AddCategoryHandler)
 		category.POST("/edit",CategoryHandler.EditCategoryHandler)
 		category.POST("/delete",CategoryHandler.DeleteCategoryHandler)
@@ -50,6 +52,7 @@ func main() {
 	order := r.Group("/api/order")
 	{
 		order.GET("/list",OrderHandler.OrderListHandler)
+		order.GET("/info/:id",OrderHandler.OrderInfoHandler)
 		order.POST("/add",OrderHandler.AddOrderHandler)
 		order.POST("/edit",OrderHandler.EditOrderHandler)
 		order.POST("/delete",OrderHandler.DeleteOrderHandler)
@@ -58,6 +61,7 @@ func main() {
 	product := r.Group("/api/product")
 	{
 		product.GET("/list",ProductHandler.ProductListHandler)
+		product.GET("/info/:id",ProductHandler.ProductInfoHandler)
 		product.POST("/add",ProductHandler.AddProductHandler)
 		product.POST("/edit",ProductHandler.EditProductHandler)
 		product.POST("/delete",ProductHandler.DeleteProductHandler)

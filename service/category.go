@@ -7,9 +7,9 @@ import (
 )
 
 type CategorySrv interface {
-	List(req *query.ListQuery) (Categorys []*model.Category, err error)
+	List(req *query.ListQuery) (Categories []*model.CategoryResult, err error)
 	GetTotal(req *query.ListQuery) (total int64, err error)
-	Get(Category model.Category) (*model.Category, error)
+	Get(id string) ([]*model.CategoryResult, error)
 	Exist(Category model.Category) *model.Category
 	ExistByCategoryID(id string) *model.Category
 	Add(Category model.Category) (*model.Category, error)
@@ -21,14 +21,14 @@ type CategoryService struct {
 	Repo repository.CategoryRepoInterface
 }
 
-func (srv *CategoryService) List(req *query.ListQuery) (categories []*model.Category, err error){
+func (srv *CategoryService) List(req *query.ListQuery) (categories []*model.CategoryResult, err error){
 	return srv.Repo.List(req)
 }
 func (srv *CategoryService) GetTotal(req *query.ListQuery) (total int64, err error){
 	return srv.Repo.GetTotal(req)
 }
-func (srv *CategoryService) Get(category model.Category) (*model.Category, error){
-	return srv.Repo.Get(category)
+func (srv *CategoryService) Get(id string) ([]*model.CategoryResult, error){
+	return srv.Repo.Get(id)
 }
 func (srv *CategoryService) Exist(category model.Category) *model.Category{
 	return srv.Repo.Exist(category)
