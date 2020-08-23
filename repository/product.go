@@ -59,8 +59,9 @@ func (repo *ProductRepository) Get(product model.Product) (*model.Product, error
 
 func (repo *ProductRepository) Exist(product model.Product) *model.Product {
 	if product.ProductName != "" {
-		repo.DB.Model(&product).Where("product_name= ?", product.ProductName)
-		return &product
+		var temp model.Product
+		repo.DB.Where("product_name= ?", product.ProductName).First(&temp)
+		return &temp
 	}
 	return nil
 }
@@ -73,7 +74,7 @@ func (repo *ProductRepository) ExistByProductID(id string) *model.Product {
 
 func (repo *ProductRepository) Add(product model.Product) (*model.Product, error) {
 	exist := repo.Exist(product)
-	if exist !=nil {
+	if exist !=nil && exist.ProductName!="" {
 		return &product, fmt.Errorf("商品已存在")
 	}
 	err := repo.DB.Create(product).Error
@@ -87,10 +88,15 @@ func (repo *ProductRepository) Edit(product model.Product) (bool, error) {
 	if product.ProductId == "" {
 		return false, fmt.Errorf("请传入更新 ID")
 	}
-	id := &model.Product{
+	p := &model.Product{
 		ProductId: product.ProductId,
 	}
-	err := repo.DB.Model(id).Update(product).Error
+	err := repo.DB.Model(p).Where("product_id=?", product.ProductId).Updates(map[string]interface{}{
+		"product_name": product.ProductName, "product_intro": product.ProductIntro, "category_id": product.CategoryId,
+		"product_cover_img":product.ProductCoverImg,"product_banner":product.ProductBanner,"original_price":product.OriginalPrice,
+		"selling_price":product.SellingPrice, "stock_num":product.StockNum,"tag":product.Tag,"sell_status":product.SellStatus,
+		"product_detail_content":product.ProductDetailContent,
+	}).Error
 	if err != nil {
 		return false, err
 	}

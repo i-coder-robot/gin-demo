@@ -64,7 +64,7 @@ func main() {
 		product.GET("/info/:id",ProductHandler.ProductInfoHandler)
 		product.POST("/add",ProductHandler.AddProductHandler)
 		product.POST("/edit",ProductHandler.EditProductHandler)
-		product.POST("/delete",ProductHandler.DeleteProductHandler)
+		product.POST("/delete/:id",ProductHandler.DeleteProductHandler)
 	}
 
 	user := r.Group("/api/user")

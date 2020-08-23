@@ -171,8 +171,7 @@ func (h *ProductHandler) EditProductHandler(c *gin.Context) {
 
 func (h *ProductHandler) DeleteProductHandler(c *gin.Context) {
 	id := c.Param("id")
-	r:=h.ProductSrv.ExistByProductID(id)
-	b, err := h.ProductSrv.Delete(*r)
+	b, err := h.ProductSrv.Delete(id)
 	entity := resp.Entity{
 		Code:  int(enum.Operate_Fail),
 		Msg:   enum.Operate_Fail.String(),

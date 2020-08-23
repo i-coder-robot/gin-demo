@@ -11,11 +11,11 @@ type Product struct {
 	SellingPrice int `json:"sellingPrice" gorm:"column:selling_price"`
 	StockNum int `json:"stockNum" gorm:"column:stock_num"`
 	Tag string `json:"tag" gorm:"column:tag"`
-	SellStatus bool `json:"sellStatus" gorm:"column:sell_status"`
+	SellStatus int `json:"sellStatus" gorm:"column:sell_status"`
 	CreateUser string `json:"createUser" gorm:"column:create_user"`
 	UpdateUser string `json:"updateUser" gorm:"column:update_user"`
 	ProductDetailContent string `json:"productDetailContent" gorm:"column:product_detail_content"`
 	IsDeleted bool `json:"isDeleted" gorm:"column:is_deleted"`
-	CreateAt string `json:"createAt" gorm:"column:create_at"`
-	UpdateAt string `json:"updateAt" gorm:"column:update_at"`
+	//CreateAt string `json:"createAt" gorm:"column:create_at"`
+	//UpdateAt string `json:"updateAt" gorm:"column:update_at"`
 }
