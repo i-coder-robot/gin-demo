@@ -53,7 +53,6 @@ func (h *CategoryHandler) CategoryListHandler(c *gin.Context) {
 		Data:      newList,
 	}
 	c.JSON(http.StatusOK, gin.H{"entity": entity})
-
 }
 
 func (h *CategoryHandler) GetEntity(result []*model.CategoryResult) map[string]*resp.Category {
@@ -129,54 +128,6 @@ func (h *CategoryHandler) CategoryInfoHandler(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"entity": entity})
 }
-
-//
-//func (h *CategoryHandler) CategoryListHandler(c *gin.Context) {
-//	var q query.ListQuery
-//	entity := resp.Entity{
-//		Code:      int(enum.Operate_Fail),
-//		Msg:       enum.Operate_Fail.String(),
-//		Total:     0,
-//		TotalPage: 1,
-//		Data:      nil,
-//	}
-//	err := c.ShouldBindQuery(&q)
-//	if err != nil {
-//		c.JSON(http.StatusInternalServerError, gin.H{"entity": entity})
-//		return
-//	}
-//	list, err := h.CategorySrv.List(&q)
-//	total, err := h.CategorySrv.GetTotal(&q)
-//
-//	if err != nil {
-//		panic(err)
-//	}
-//	if q.Limit == 0 {
-//		q.Limit = 5
-//	}
-//	ret := int(total % q.Limit)
-//	ret2 := int(total / q.Limit)
-//	totalPage := 0
-//	if ret == 0 {
-//		totalPage = ret2
-//	} else {
-//		totalPage = ret2 + 1
-//	}
-//	var newList []*resp.Category
-//	for _,item := range(list){
-//		r:=h.GetEntity(*item)
-//		newList= append(newList, &r)
-//	}
-//
-//	entity = resp.Entity{
-//		Code:      http.StatusOK,
-//		Msg:       "OK",
-//		Total:     total,
-//		TotalPage: totalPage,
-//		Data:      newList,
-//	}
-//	c.JSON(http.StatusOK, gin.H{"entity": entity})
-//}
 
 func (h *CategoryHandler) AddCategoryHandler(c *gin.Context) {
 	entity := resp.Entity{

@@ -58,9 +58,11 @@ func (repo *BannerRepository) Get(banner model.Banner) (*model.Banner, error) {
 }
 
 func (repo *BannerRepository) Exist(banner model.Banner) *model.Banner {
-	if banner.Url != "" {
-		repo.DB.Model(&banner).Where("url= ?", banner.Url)
-		return &banner
+
+	if banner.Url != "" && banner.RedirectUrl!=""{
+		var b model.Banner
+		repo.DB.Model(&banner).Where("url= ? and redirect_url", banner.Url,banner.RedirectUrl).First(&b)
+		return &b
 	}
 	return nil
 }
@@ -73,7 +75,7 @@ func (repo *BannerRepository) ExistByBannerID(id string) *model.Banner {
 
 func (repo *BannerRepository) Add(banner model.Banner) (*model.Banner, error) {
 	exist := repo.Exist(banner)
-	if exist != nil {
+	if exist != nil && exist.Url==banner.Url && exist.RedirectUrl==banner.RedirectUrl {
 		return nil, fmt.Errorf("轮播已存在")
 	}
 	err := repo.DB.Create(banner).Error
@@ -87,10 +89,12 @@ func (repo *BannerRepository) Edit(banner model.Banner) (bool, error) {
 	if banner.BannerID == "" {
 		return false, fmt.Errorf("请传入更新 ID")
 	}
-	id := &model.Banner{
-		BannerID: banner.BannerID,
-	}
-	err := repo.DB.Model(id).Update(banner).Error
+	b := &model.Banner{}
+	err := repo.DB.Model(b).Where("banner_id=?", banner.BannerID).Updates(map[string]interface{}{
+		"Url":banner.Url,
+		"RedirectUrl": banner.RedirectUrl,
+		"OrderBy": banner.Order,
+	}).Error
 	if err != nil {
 		return false, err
 	}
@@ -98,8 +102,7 @@ func (repo *BannerRepository) Edit(banner model.Banner) (bool, error) {
 }
 
 func (repo *BannerRepository) Delete(id string) (bool, error) {
-	banner := repo.ExistByBannerID(id)
-	err := repo.DB.Delete(banner).Error
+	err := repo.DB.Where("banner_id = ?", id).Delete(&model.Banner{}).Error
 	if err != nil {
 		return false, err
 	}

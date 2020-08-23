@@ -88,9 +88,7 @@ func (repo *ProductRepository) Edit(product model.Product) (bool, error) {
 	if product.ProductId == "" {
 		return false, fmt.Errorf("请传入更新 ID")
 	}
-	p := &model.Product{
-		ProductId: product.ProductId,
-	}
+	p := &model.Product{}
 	err := repo.DB.Model(p).Where("product_id=?", product.ProductId).Updates(map[string]interface{}{
 		"product_name": product.ProductName, "product_intro": product.ProductIntro, "category_id": product.CategoryId,
 		"product_cover_img":product.ProductCoverImg,"product_banner":product.ProductBanner,"original_price":product.OriginalPrice,

@@ -34,10 +34,10 @@ func main() {
 	banner := r.Group("/api/banner")
 	{
 		banner.GET("/list",BannerHandler.BannerListHandler)
-		//banner.GET("/info/:id",BannerHandler.BannerSrv)
+		banner.GET("/info/:id",BannerHandler.BannerInfoHandler)
 		banner.POST("/add",BannerHandler.AddBannerHandler)
 		banner.POST("/edit",BannerHandler.EditBannerHandler)
-		banner.POST("/delete",BannerHandler.DeleteBannerHandler)
+		banner.POST("/delete/:id",BannerHandler.DeleteBannerHandler)
 	}
 
 	category := r.Group("/api/category")
@@ -46,7 +46,7 @@ func main() {
 		category.GET("/info/:id",CategoryHandler.CategoryInfoHandler)
 		category.POST("/add",CategoryHandler.AddCategoryHandler)
 		category.POST("/edit",CategoryHandler.EditCategoryHandler)
-		category.POST("/delete",CategoryHandler.DeleteCategoryHandler)
+		category.POST("/delete/:id",CategoryHandler.DeleteCategoryHandler)
 	}
 
 	order := r.Group("/api/order")
@@ -55,7 +55,7 @@ func main() {
 		order.GET("/info/:id",OrderHandler.OrderInfoHandler)
 		order.POST("/add",OrderHandler.AddOrderHandler)
 		order.POST("/edit",OrderHandler.EditOrderHandler)
-		order.POST("/delete",OrderHandler.DeleteOrderHandler)
+		order.POST("/delete/:id",OrderHandler.DeleteOrderHandler)
 	}
 
 	product := r.Group("/api/product")
