@@ -14,6 +14,47 @@ type CategoryHandler struct {
 	CategorySrv service.CategorySrv
 }
 
+
+func (h *CategoryHandler) CategoryList4BackendHandler(c *gin.Context) {
+	var q query.ListQuery
+	entity := resp.Entity{
+		Code:      int(enum.Operate_Fail),
+		Msg:       enum.Operate_Fail.String(),
+		Total:     0,
+		TotalPage: 1,
+		Data:      nil,
+	}
+	err := c.ShouldBindQuery(&q)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"entity": entity})
+		return
+	}
+
+	if q.Limit==0{
+		q.Limit=5
+	}
+
+	list, err := h.CategorySrv.List(&q)
+	total, err := h.CategorySrv.GetTotal(&q)
+
+	pageTotal := 0
+	if total%q.Limit == 0 {
+		pageTotal = int(total / q.Limit)
+	} else {
+		pageTotal = int(total/q.Limit) + 1
+	}
+
+	entity = resp.Entity{
+		Code:      http.StatusOK,
+		Msg:       "OK",
+		Total:     total,
+		TotalPage: pageTotal,
+		Data:      list,
+	}
+	c.JSON(http.StatusOK, gin.H{"entity": entity})
+}
+
+
 func (h *CategoryHandler) CategoryListHandler(c *gin.Context) {
 	var q query.ListQuery
 	entity := resp.Entity{
@@ -136,19 +177,19 @@ func (h *CategoryHandler) AddCategoryHandler(c *gin.Context) {
 		Total: 0,
 		Data:  nil,
 	}
-	p := model.Category{}
-	err := c.ShouldBindJSON(&p)
+	category := model.CategoryResult{}
+	err := c.ShouldBindJSON(&category)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{"entity": entity})
 		return
 	}
 
-	r, err := h.CategorySrv.Add(p)
+	b, err := h.CategorySrv.Add(category)
 	if err != nil {
 		entity.Msg = err.Error()
 		return
 	}
-	if r.CategoryID == "" {
+	if !b{
 		c.JSON(http.StatusOK, gin.H{"entity": entity})
 		return
 	}

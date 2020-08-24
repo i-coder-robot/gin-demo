@@ -17,6 +17,8 @@ type OrderHandler struct {
 func (h *OrderHandler) GetEntity(result model.Order) resp.Order {
 	return resp.Order{
 		OrderId:result.OrderId,
+		NickName: result.NickName,
+		Mobile: result.Mobile,
 		TotalPrice:result.TotalPrice,
 		PayStatus:result.PayStatus,
 		PayType:result.PayType,

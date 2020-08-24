@@ -1,33 +1,12 @@
 package model
 
 type Category struct {
-	CategoryID string `json:"categoryID"`
-	Name string `json:"name"`
-	Desc string `json:"desc"`
-	Order int `json:"order"`
-	Children []*Category2 `json:"children"`
+	CategoryID string `json:"categoryID" gorm:"column:category_id"`
+	Name string `json:"name" gorm:"column:name"`
+	Desc string `json:"desc" gorm:"column:desc"`
+	Order int `json:"order" gorm:"column:order_by"`
+	ParentId string `gorm:"column:c1_parent_id"`
 	IsDeleted bool `json:"isDeleted" gorm:"column:is_deleted"`
-	CreateAt string `json:"createAt" gorm:"column:create_at"`
-	UpdateAt string `json:"updateAt" gorm:"column:update_at"`
-}
-
-type Category2 struct {
-	CategoryID string `json:"categoryID"`
-	Name string `json:"name"`
-	Desc string `json:"desc"`
-	Order int `json:"order"`
-	Children []*Category3 `json:"children"`
-	CreateAt string `json:"createAt"`
-	UpdateAt string `json:"updateAt"`
-}
-
-type Category3 struct {
-	CategoryID string `json:"categoryID"`
-	Name string `json:"name"`
-	Desc string `json:"desc"`
-	Order int `json:"order"`
-	CreateAt string `json:"createAt"`
-	UpdateAt string `json:"updateAt"`
 }
 
 type CategoryResult struct {

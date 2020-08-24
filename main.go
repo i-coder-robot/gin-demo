@@ -43,6 +43,7 @@ func main() {
 	category := r.Group("/api/category")
 	{
 		category.GET("/list",CategoryHandler.CategoryListHandler)
+		category.GET("/list4backend",CategoryHandler.CategoryList4BackendHandler)
 		category.GET("/info/:id",CategoryHandler.CategoryInfoHandler)
 		category.POST("/add",CategoryHandler.AddCategoryHandler)
 		category.POST("/edit",CategoryHandler.EditCategoryHandler)

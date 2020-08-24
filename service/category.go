@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"github.com/i-coder-robot/gin-demo/model"
 	"github.com/i-coder-robot/gin-demo/query"
 	"github.com/i-coder-robot/gin-demo/repository"
@@ -12,7 +13,7 @@ type CategorySrv interface {
 	Get(id string) ([]*model.CategoryResult, error)
 	Exist(Category model.Category) *model.Category
 	ExistByCategoryID(id string) *model.Category
-	Add(Category model.Category) (*model.Category, error)
+	Add(Category model.CategoryResult) (bool, error)
 	Edit(Category model.Category) (bool, error)
 	Delete(c model.Category) (bool, error)
 }
@@ -37,8 +38,56 @@ func (srv *CategoryService) ExistByCategoryID(id string) *model.Category{
 	return srv.Repo.ExistByCategoryID(id)
 }
 
-func (srv *CategoryService) Add(category model.Category) (*model.Category, error){
-	return srv.Repo.Add(category)
+func (srv *CategoryService) Add(category model.CategoryResult) (bool, error){
+
+	//判断3个category是否都存在，就重复，有任何一个不重复，都可以添加
+	c1:=model.Category{
+		CategoryID: category.C1CategoryID,
+		Name: category.C1Name,
+		Desc: category.C1Desc,
+		Order:category.C1Order,
+		ParentId:"0",
+		IsDeleted:false,
+	}
+	r1 := srv.Exist(c1)
+
+	c2:= model.Category{
+		CategoryID: category.C2CategoryID,
+		Name: category.C2Name,
+		Desc: "",
+		Order:category.C2Order,
+		ParentId:category.C2ParentId,
+		IsDeleted:false,
+	}
+	r2 := srv.Exist(c2)
+
+	c3:= model.Category{
+		CategoryID: category.C3CategoryID,
+		Name: category.C3Name,
+		Desc: "",
+		Order:category.C3Order,
+		ParentId:category.C3ParentId,
+		IsDeleted:false,
+	}
+	r3 := srv.Exist(c3)
+
+	if r1.Name!="" && r2.Name!=""&&r3.Name!=""{
+		return false,errors.New("分类已存在")
+	}
+
+	if r1.Name==""{
+		srv.Repo.Add(c1)
+	}
+
+	if r2.Name==""{
+		srv.Repo.Add(c2)
+	}
+
+	if r3.Name==""{
+		srv.Repo.Add(c3)
+	}
+
+	return true,nil
 }
 func (srv *CategoryService) Edit(category model.Category) (bool, error){
 	return srv.Repo.Edit(category)
