@@ -5,6 +5,7 @@ import (
 	"github.com/i-coder-robot/gin-demo/model"
 	"github.com/i-coder-robot/gin-demo/query"
 	"github.com/i-coder-robot/gin-demo/repository"
+	uuid "github.com/satori/go.uuid"
 )
 
 type ProductSrv interface {
@@ -40,6 +41,10 @@ func (srv *ProductService) ExistByProductID(id string) *model.Product {
 }
 
 func (srv *ProductService) Add(product model.Product) (*model.Product, error) {
+	if product.ProductId==""{
+		product.ProductId=uuid.NewV4().String()
+	}
+	product.IsDeleted=false
 	return srv.Repo.Add(product)
 }
 func (srv *ProductService) Edit(product model.Product) (bool, error) {

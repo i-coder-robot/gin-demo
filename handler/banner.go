@@ -25,8 +25,8 @@ func (h *BannerHandler) GetEntity(result model.Banner) resp.Banner{
 
 func (h *BannerHandler) BannerInfoHandler(c *gin.Context) {
 	entity := resp.Entity{
-		Code:      int(enum.Operate_Fail),
-		Msg:       enum.Operate_Fail.String(),
+		Code:      int(enum.OperateFail),
+		Msg:       enum.OperateFail.String(),
 		Total:     0,
 		TotalPage: 1,
 		Data:      nil,
@@ -61,8 +61,8 @@ func (h *BannerHandler) BannerInfoHandler(c *gin.Context) {
 func (h *BannerHandler) BannerListHandler(c *gin.Context) {
 	var q query.ListQuery
 	entity := resp.Entity{
-		Code:      int(enum.Operate_Fail),
-		Msg:       enum.Operate_Fail.String(),
+		Code:      int(enum.OperateFail),
+		Msg:       enum.OperateFail.String(),
 		Total:     0,
 		TotalPage: 1,
 		Data:      nil,
@@ -107,8 +107,8 @@ func (h *BannerHandler) BannerListHandler(c *gin.Context) {
 
 func (h *BannerHandler) AddBannerHandler(c *gin.Context) {
 	entity := resp.Entity{
-		Code:  int(enum.Operate_Fail),
-		Msg:   enum.Operate_Fail.String(),
+		Code:  int(enum.OperateFail),
+		Msg:   enum.OperateFail.String(),
 		Total: 0,
 		Data:  nil,
 	}
@@ -128,16 +128,16 @@ func (h *BannerHandler) AddBannerHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"entity": entity})
 		return
 	}
-	entity.Code = int(enum.Operate_OK)
-	entity.Msg = enum.Operate_OK.String()
+	entity.Code = int(enum.OperateOk)
+	entity.Msg = enum.OperateOk.String()
 	c.JSON(http.StatusOK, gin.H{"entity": entity})
 }
 
 func (h *BannerHandler) EditBannerHandler(c *gin.Context) {
 	banner := model.Banner{}
 	entity := resp.Entity{
-		Code:  int(enum.Operate_Fail),
-		Msg:   enum.Operate_Fail.String(),
+		Code:  int(enum.OperateFail),
+		Msg:   enum.OperateFail.String(),
 		Total: 0,
 		Data:  nil,
 	}
@@ -152,8 +152,8 @@ func (h *BannerHandler) EditBannerHandler(c *gin.Context) {
 		return
 	}
 	if b {
-		entity.Code=int(enum.Operate_OK)
-		entity.Msg=enum.Operate_OK.String()
+		entity.Code=int(enum.OperateOk)
+		entity.Msg=enum.OperateOk.String()
 		c.JSON(http.StatusOK, gin.H{"entity": entity})
 	}
 }
@@ -163,8 +163,8 @@ func (h *BannerHandler) DeleteBannerHandler(c *gin.Context) {
 
 	b, err := h.BannerSrv.Delete(id)
 	entity := resp.Entity{
-		Code:  int(enum.Operate_Fail),
-		Msg:   enum.Operate_Fail.String(),
+		Code:  int(enum.OperateFail),
+		Msg:   enum.OperateFail.String(),
 		Total: 0,
 		Data:  nil,
 	}
@@ -173,8 +173,8 @@ func (h *BannerHandler) DeleteBannerHandler(c *gin.Context) {
 		return
 	}
 	if b {
-		entity.Code = int(enum.Operate_OK)
-		entity.Msg = enum.Operate_OK.String()
+		entity.Code = int(enum.OperateOk)
+		entity.Msg = enum.OperateOk.String()
 		c.JSON(http.StatusOK, gin.H{"entity": entity})
 	}
 }

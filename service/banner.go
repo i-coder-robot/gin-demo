@@ -4,6 +4,7 @@ import (
 	"github.com/i-coder-robot/gin-demo/model"
 	"github.com/i-coder-robot/gin-demo/query"
 	"github.com/i-coder-robot/gin-demo/repository"
+	uuid "github.com/satori/go.uuid"
 )
 
 type BannerSrv interface {
@@ -39,6 +40,9 @@ func (srv *BannerService) ExistByBannerID(id string) *model.Banner {
 }
 
 func (srv *BannerService) Add(banner model.Banner) (*model.Banner, error){
+	if banner.BannerID==""{
+		banner.BannerID= uuid.NewV4().String()
+	}
 	return srv.Repo.Add(banner)
 }
 func (srv *BannerService) Edit(banner model.Banner) (bool, error){

@@ -34,8 +34,8 @@ func (h *ProductHandler) GetEntity(result model.Product) resp.Product {
 
 func (h *ProductHandler) ProductInfoHandler(c *gin.Context) {
 	entity := resp.Entity{
-		Code:      int(enum.Operate_Fail),
-		Msg:       enum.Operate_Fail.String(),
+		Code:      int(enum.OperateFail),
+		Msg:       enum.OperateFail.String(),
 		Total:     0,
 		TotalPage: 1,
 		Data:      nil,
@@ -70,8 +70,8 @@ func (h *ProductHandler) ProductInfoHandler(c *gin.Context) {
 func (h *ProductHandler) ProductListHandler(c *gin.Context) {
 	var q query.ListQuery
 	entity := resp.Entity{
-		Code:      int(enum.Operate_Fail),
-		Msg:       enum.Operate_Fail.String(),
+		Code:      int(enum.OperateFail),
+		Msg:       enum.OperateFail.String(),
 		Total:     0,
 		TotalPage: 1,
 		Data:      nil,
@@ -116,8 +116,8 @@ func (h *ProductHandler) ProductListHandler(c *gin.Context) {
 
 func (h *ProductHandler) AddProductHandler(c *gin.Context) {
 	entity := resp.Entity{
-		Code:  int(enum.Operate_Fail),
-		Msg:   enum.Operate_Fail.String(),
+		Code:  int(enum.OperateFail),
+		Msg:   enum.OperateFail.String(),
 		Total: 0,
 		Data:  nil,
 	}
@@ -137,8 +137,8 @@ func (h *ProductHandler) AddProductHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"entity": entity})
 		return
 	}
-	entity.Code = int(enum.Operate_OK)
-	entity.Msg = enum.Operate_OK.String()
+	entity.Code = int(enum.OperateOk)
+	entity.Msg = enum.OperateOk.String()
 	c.JSON(http.StatusOK, gin.H{"entity": entity})
 
 }
@@ -146,8 +146,8 @@ func (h *ProductHandler) AddProductHandler(c *gin.Context) {
 func (h *ProductHandler) EditProductHandler(c *gin.Context) {
 	p := model.Product{}
 	entity := resp.Entity{
-		Code:  int(enum.Operate_Fail),
-		Msg:   enum.Operate_Fail.String(),
+		Code:  int(enum.OperateFail),
+		Msg:   enum.OperateFail.String(),
 		Total: 0,
 		Data:  nil,
 	}
@@ -162,8 +162,8 @@ func (h *ProductHandler) EditProductHandler(c *gin.Context) {
 		return
 	}
 	if b {
-		entity.Code=int(enum.Operate_OK)
-		entity.Msg=enum.Operate_OK.String()
+		entity.Code=int(enum.OperateOk)
+		entity.Msg=enum.OperateOk.String()
 		c.JSON(http.StatusOK, gin.H{"entity": entity})
 	}
 
@@ -173,8 +173,8 @@ func (h *ProductHandler) DeleteProductHandler(c *gin.Context) {
 	id := c.Param("id")
 	b, err := h.ProductSrv.Delete(id)
 	entity := resp.Entity{
-		Code:  int(enum.Operate_Fail),
-		Msg:   enum.Operate_Fail.String(),
+		Code:  int(enum.OperateFail),
+		Msg:   enum.OperateFail.String(),
 		Total: 0,
 		Data:  nil,
 	}
@@ -183,8 +183,8 @@ func (h *ProductHandler) DeleteProductHandler(c *gin.Context) {
 		return
 	}
 	if b {
-		entity.Code = int(enum.Operate_OK)
-		entity.Msg = enum.Operate_OK.String()
+		entity.Code = int(enum.OperateOk)
+		entity.Msg = enum.OperateOk.String()
 		c.JSON(http.StatusOK, gin.H{"entity": entity})
 	}
 }

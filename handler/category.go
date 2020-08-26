@@ -18,8 +18,8 @@ type CategoryHandler struct {
 func (h *CategoryHandler) CategoryList4BackendHandler(c *gin.Context) {
 	var q query.ListQuery
 	entity := resp.Entity{
-		Code:      int(enum.Operate_Fail),
-		Msg:       enum.Operate_Fail.String(),
+		Code:      int(enum.OperateFail),
+		Msg:       enum.OperateFail.String(),
 		Total:     0,
 		TotalPage: 1,
 		Data:      nil,
@@ -54,12 +54,11 @@ func (h *CategoryHandler) CategoryList4BackendHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"entity": entity})
 }
 
-
 func (h *CategoryHandler) CategoryListHandler(c *gin.Context) {
 	var q query.ListQuery
 	entity := resp.Entity{
-		Code:      int(enum.Operate_Fail),
-		Msg:       enum.Operate_Fail.String(),
+		Code:      int(enum.OperateFail),
+		Msg:       enum.OperateFail.String(),
 		Total:     0,
 		TotalPage: 1,
 		Data:      nil,
@@ -139,8 +138,8 @@ func (h *CategoryHandler) GetEntity(result []*model.CategoryResult) map[string]*
 func (h *CategoryHandler) CategoryInfoHandler(c *gin.Context) {
 	//这个info传入的是第三级categorydeId
 	entity := resp.Entity{
-		Code:      int(enum.Operate_Fail),
-		Msg:       enum.Operate_Fail.String(),
+		Code:      int(enum.OperateFail),
+		Msg:       enum.OperateFail.String(),
 		Total:     0,
 		TotalPage: 1,
 		Data:      nil,
@@ -172,8 +171,8 @@ func (h *CategoryHandler) CategoryInfoHandler(c *gin.Context) {
 
 func (h *CategoryHandler) AddCategoryHandler(c *gin.Context) {
 	entity := resp.Entity{
-		Code:  int(enum.Operate_Fail),
-		Msg:   enum.Operate_Fail.String(),
+		Code:  int(enum.OperateFail),
+		Msg:   enum.OperateFail.String(),
 		Total: 0,
 		Data:  nil,
 	}
@@ -193,8 +192,8 @@ func (h *CategoryHandler) AddCategoryHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"entity": entity})
 		return
 	}
-	entity.Code = int(enum.Operate_OK)
-	entity.Msg = enum.Operate_OK.String()
+	entity.Code = int(enum.OperateOk)
+	entity.Msg = enum.OperateOk.String()
 	c.JSON(http.StatusOK, gin.H{"entity": entity})
 
 }
@@ -202,8 +201,8 @@ func (h *CategoryHandler) AddCategoryHandler(c *gin.Context) {
 func (h *CategoryHandler) EditCategoryHandler(c *gin.Context) {
 	category := model.Category{}
 	entity := resp.Entity{
-		Code:  int(enum.Operate_Fail),
-		Msg:   enum.Operate_Fail.String(),
+		Code:  int(enum.OperateFail),
+		Msg:   enum.OperateFail.String(),
 		Total: 0,
 		Data:  nil,
 	}
@@ -218,8 +217,8 @@ func (h *CategoryHandler) EditCategoryHandler(c *gin.Context) {
 		return
 	}
 	if b {
-		entity.Code = int(enum.Operate_OK)
-		entity.Msg = enum.Operate_OK.String()
+		entity.Code = int(enum.OperateOk)
+		entity.Msg = enum.OperateOk.String()
 		c.JSON(http.StatusOK, gin.H{"entity": entity})
 	}
 
@@ -230,8 +229,8 @@ func (h *CategoryHandler) DeleteCategoryHandler(c *gin.Context) {
 	r := h.CategorySrv.ExistByCategoryID(id)
 	b, err := h.CategorySrv.Delete(*r)
 	entity := resp.Entity{
-		Code:  int(enum.Operate_Fail),
-		Msg:   enum.Operate_Fail.String(),
+		Code:  int(enum.OperateFail),
+		Msg:   enum.OperateFail.String(),
 		Total: 0,
 		Data:  nil,
 	}
@@ -240,8 +239,8 @@ func (h *CategoryHandler) DeleteCategoryHandler(c *gin.Context) {
 		return
 	}
 	if b {
-		entity.Code = int(enum.Operate_OK)
-		entity.Msg = enum.Operate_OK.String()
+		entity.Code = int(enum.OperateOk)
+		entity.Msg = enum.OperateOk.String()
 		c.JSON(http.StatusOK, gin.H{"entity": entity})
 	}
 }

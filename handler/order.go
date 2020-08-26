@@ -32,8 +32,8 @@ func (h *OrderHandler) GetEntity(result model.Order) resp.Order {
 
 func (h *OrderHandler) OrderInfoHandler(c *gin.Context) {
 	entity := resp.Entity{
-		Code:      int(enum.Operate_Fail),
-		Msg:       enum.Operate_Fail.String(),
+		Code:      int(enum.OperateFail),
+		Msg:       enum.OperateFail.String(),
 		Total:     0,
 		TotalPage: 1,
 		Data:      nil,
@@ -68,8 +68,8 @@ func (h *OrderHandler) OrderInfoHandler(c *gin.Context) {
 func (h *OrderHandler) OrderListHandler(c *gin.Context) {
 	var q query.ListQuery
 	entity := resp.Entity{
-		Code:      int(enum.Operate_Fail),
-		Msg:       enum.Operate_Fail.String(),
+		Code:      int(enum.OperateFail),
+		Msg:       enum.OperateFail.String(),
 		Total:     0,
 		TotalPage: 1,
 		Data:      nil,
@@ -114,8 +114,8 @@ func (h *OrderHandler) OrderListHandler(c *gin.Context) {
 
 func (h *OrderHandler) AddOrderHandler(c *gin.Context) {
 	entity := resp.Entity{
-		Code:  int(enum.Operate_Fail),
-		Msg:   enum.Operate_Fail.String(),
+		Code:  int(enum.OperateFail),
+		Msg:   enum.OperateFail.String(),
 		Total: 0,
 		Data:  nil,
 	}
@@ -135,16 +135,16 @@ func (h *OrderHandler) AddOrderHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"entity": entity})
 		return
 	}
-	entity.Code = int(enum.Operate_OK)
-	entity.Msg = enum.Operate_OK.String()
+	entity.Code = int(enum.OperateOk)
+	entity.Msg = enum.OperateOk.String()
 	c.JSON(http.StatusOK, gin.H{"entity": entity})
 }
 
 func (h *OrderHandler) EditOrderHandler(c *gin.Context) {
 	o := model.Order{}
 	entity := resp.Entity{
-		Code:  int(enum.Operate_Fail),
-		Msg:   enum.Operate_Fail.String(),
+		Code:  int(enum.OperateFail),
+		Msg:   enum.OperateFail.String(),
 		Total: 0,
 		Data:  nil,
 	}
@@ -159,8 +159,8 @@ func (h *OrderHandler) EditOrderHandler(c *gin.Context) {
 		return
 	}
 	if b {
-		entity.Code=int(enum.Operate_OK)
-		entity.Msg=enum.Operate_OK.String()
+		entity.Code=int(enum.OperateOk)
+		entity.Msg=enum.OperateOk.String()
 		c.JSON(http.StatusOK, gin.H{"entity": entity})
 	}
 
@@ -171,8 +171,8 @@ func (h *OrderHandler) DeleteOrderHandler(c *gin.Context) {
 	r:=h.OrderSrv.ExistByOrderID(id)
 	b, err := h.OrderSrv.Delete(*r)
 	entity := resp.Entity{
-		Code:  int(enum.Operate_Fail),
-		Msg:   enum.Operate_Fail.String(),
+		Code:  int(enum.OperateFail),
+		Msg:   enum.OperateFail.String(),
 		Total: 0,
 		Data:  nil,
 	}
@@ -181,8 +181,8 @@ func (h *OrderHandler) DeleteOrderHandler(c *gin.Context) {
 		return
 	}
 	if b {
-		entity.Code = int(enum.Operate_OK)
-		entity.Msg = enum.Operate_OK.String()
+		entity.Code = int(enum.OperateOk)
+		entity.Msg = enum.OperateOk.String()
 		c.JSON(http.StatusOK, gin.H{"entity": entity})
 	}
 }

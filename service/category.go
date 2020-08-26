@@ -5,6 +5,7 @@ import (
 	"github.com/i-coder-robot/gin-demo/model"
 	"github.com/i-coder-robot/gin-demo/query"
 	"github.com/i-coder-robot/gin-demo/repository"
+	uuid "github.com/satori/go.uuid"
 )
 
 type CategorySrv interface {
@@ -40,6 +41,21 @@ func (srv *CategoryService) ExistByCategoryID(id string) *model.Category{
 
 func (srv *CategoryService) Add(category model.CategoryResult) (bool, error){
 
+	var c1CategoryId string
+	var c2CategoryId string
+	if category.C1CategoryID==""{
+		c1CategoryId=uuid.NewV4().String()
+		category.C1CategoryID=c1CategoryId
+	}
+	if category.C2CategoryID ==""{
+		c2CategoryId=uuid.NewV4().String()
+		category.C2CategoryID=c2CategoryId
+		category.C2ParentId = c1CategoryId
+	}
+	if category.C3CategoryID == ""{
+		category.C3CategoryID=uuid.NewV4().String()
+		category.C3ParentId = c2CategoryId
+	}
 	//判断3个category是否都存在，就重复，有任何一个不重复，都可以添加
 	c1:=model.Category{
 		CategoryID: category.C1CategoryID,

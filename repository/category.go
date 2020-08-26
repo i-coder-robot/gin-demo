@@ -71,9 +71,10 @@ func (repo *CategoryRepository) Get(id string) ([]*model.CategoryResult, error) 
 }
 
 func (repo *CategoryRepository) Exist(category model.Category) *model.Category {
+	var c model.Category
 	if category.Name != "" {
-		repo.DB.Model(&category).Where("name= ?", category.Name)
-		return &category
+		repo.DB.Model(&c).Where("name= ?", category.Name)
+		return &c
 	}
 	return nil
 }
@@ -86,13 +87,8 @@ func (repo *CategoryRepository) ExistByCategoryID(id string) *model.Category {
 }
 
 func (repo *CategoryRepository) Add(category model.Category) (*model.Category, error) {
-	exist := repo.Exist(category)
-	if exist != nil {
-		return nil, fmt.Errorf("分类已存在")
-	}
 	err := repo.DB.Create(category).Error
 	if err != nil {
-
 		return nil, fmt.Errorf("用户注册失败")
 	}
 	return &category, nil
