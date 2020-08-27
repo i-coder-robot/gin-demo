@@ -149,7 +149,7 @@ func (h *OrderHandler) EditOrderHandler(c *gin.Context) {
 		Data:  nil,
 	}
 	err := c.ShouldBindJSON(&o)
-	if err != nil {
+	if err != nil || o.OrderId=="" {
 		c.JSON(http.StatusOK, gin.H{"entity": entity})
 		return
 	}

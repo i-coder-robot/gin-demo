@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"github.com/i-coder-robot/gin-demo/model"
 	"github.com/i-coder-robot/gin-demo/query"
 	"github.com/i-coder-robot/gin-demo/repository"
@@ -42,6 +43,10 @@ func (srv *OrderService) Add(order model.Order) (*model.Order, error){
 	return srv.Repo.Add(order)
 }
 func (srv *OrderService) Edit(order model.Order) (bool, error){
+	o:=srv.ExistByOrderID(order.OrderId)
+	if o==nil || o.Mobile==""{
+		return false,errors.New("订单号不存在")
+	}
 	return srv.Repo.Edit(order)
 }
 func (srv *OrderService) Delete(o model.Order) (bool, error){

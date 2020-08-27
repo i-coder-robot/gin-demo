@@ -84,10 +84,15 @@ func (repo *OrderRepository) Edit(order model.Order) (bool, error) {
 	if order.OrderId == "" {
 		return false, fmt.Errorf("请传入更新 ID")
 	}
-	id := &model.Order{
-		OrderId: order.OrderId,
-	}
-	err := repo.DB.Model(id).Update(order).Error
+	o := &model.Order{}
+	err := repo.DB.Model(o).Where("order_id=?",order.OrderId).Updates(map[string]interface{}{
+		"nick_name":order.NickName,
+		"mobile":order.Mobile,
+		"pay_status":order.PayStatus,
+		"order_status":order.OrderStatus,
+		"extra_info":order.ExtraInfo,
+		"user_address":order.UserAddress,
+	}).Error
 	if err != nil {
 		return false, err
 	}
