@@ -109,5 +109,10 @@ func (srv *CategoryService) Edit(category model.Category) (bool, error){
 	return srv.Repo.Edit(category)
 }
 func (srv *CategoryService) Delete(c model.Category) (bool, error){
-	return srv.Repo.Delete(c)
+	if c.CategoryID==""{
+		return false,errors.New("参数错误")
+	}
+	category := srv.ExistByCategoryID(c.CategoryID)
+	category.IsDeleted=!category.IsDeleted
+	return srv.Repo.Delete(*category)
 }

@@ -25,4 +25,5 @@ type Category3 struct {
 	Desc string `json:"desc"`
 	Order int `json:"order"`
 	ParentID string `json:"parentId"`
+	IsDeleted bool `json:"isDeleted"`
 }

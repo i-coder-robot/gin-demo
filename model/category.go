@@ -26,4 +26,5 @@ type CategoryResult struct {
 	C3Name string `gorm:"column:c3_name"`
 	C3Order int  `gorm:"column:c3_order"`
 	C3ParentId string `gorm:"column:c3_parent_id"`
+	C3IsDeleted bool `gorm:"column:c3_is_deleted"`
 }

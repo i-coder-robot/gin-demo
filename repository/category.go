@@ -23,20 +23,8 @@ type CategoryRepoInterface interface {
 }
 
 func (repo *CategoryRepository) List(req *query.ListQuery) (categories []*model.CategoryResult, err error) {
-	//fmt.Println(req)
-	//db := repo.DB
-	//limit, offset := utils.Page(req.Limit, req.Page) // 分页
-	//sort := utils.Sort(req.Sort)                     // 排序 默认 created_at desc
-	//if req.Where != "" {
-	//	db = db.Where(req.Where)
-	//}
-	//
-	//if err := db.Order(sort).Limit(limit).Offset(offset).Find(&categories).Error; err != nil {
-	//	return nil, err
-	//}
-	//return categories, nil
 	var list []*model.CategoryResult
-	err = repo.DB.Raw("SELECT c1.category_id as c1_category_id,c1.name as c1_name,c1.desc as c1_desc,c1.order as c1_order,c1.parent_id as c1_parent_id, c2.category_id as c2_category_id,c2.name as c2_name,c2.order as c2_order,c2.parent_id as c2_parent_id,c3.category_id as c3_category_id,c3.name as c3_name,c3.order as c3_order,c3.parent_id as c3_parent_id FROM category c1 join category c2 on c1.category_id = c2.parent_id join category c3 on c2.category_id=c3.parent_id").Find(&list).Error
+	err = repo.DB.Raw("SELECT c1.category_id as c1_category_id,c1.name as c1_name,c1.desc as c1_desc,c1.order as c1_order,c1.parent_id as c1_parent_id, c2.category_id as c2_category_id,c2.name as c2_name,c2.order as c2_order,c2.parent_id as c2_parent_id,c3.category_id as c3_category_id,c3.name as c3_name,c3.order as c3_order,c3.parent_id as c3_parent_id,c3.is_deleted as c3_is_deleted FROM category c1 join category c2 on c1.category_id = c2.parent_id join category c3 on c2.category_id=c3.parent_id").Find(&list).Error
 	if err != nil {
 		return nil, err
 	}
@@ -44,16 +32,6 @@ func (repo *CategoryRepository) List(req *query.ListQuery) (categories []*model.
 }
 
 func (repo *CategoryRepository) GetTotal(req *query.ListQuery) (total int64, err error) {
-	//var categories []model.Category
-	//db := repo.DB
-	//if req.Where != "" {
-	//	db = db.Where(req.Where)
-	//}
-	//if err := db.Find(&categories).Count(&total).Error; err != nil {
-	//	return total, err
-	//}
-	//return total, nil
-
 	err = repo.DB.Raw("SELECT count(c3.category_id) FROM category c1 join category c2 on c1.category_id = c2.parent_id join category c3 on c2.category_id=c3.parent_id").Count(&total).Error
 	if err != nil {
 		return 0, err
@@ -109,8 +87,7 @@ func (repo *CategoryRepository) Edit(category model.Category) (bool, error) {
 }
 
 func (repo *CategoryRepository) Delete(c model.Category) (bool, error) {
-	temp := &model.Category{CategoryID: c.CategoryID}
-	err := repo.DB.Delete(temp).Error
+	err := repo.DB.Model(&c).Where("category_id=?",c.CategoryID).Update("is_deleted",c.CategoryID).Error
 	if err != nil {
 		return false, err
 	}

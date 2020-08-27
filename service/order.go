@@ -50,5 +50,6 @@ func (srv *OrderService) Edit(order model.Order) (bool, error){
 	return srv.Repo.Edit(order)
 }
 func (srv *OrderService) Delete(o model.Order) (bool, error){
+	o.IsDeleted=!o.IsDeleted
 	return srv.Repo.Delete(o)
 }
