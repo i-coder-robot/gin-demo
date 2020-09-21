@@ -9,7 +9,7 @@ import (
 
 type OrderSrv interface {
 	List(req *query.ListQuery) (Orders []*model.Order, err error)
-	GetTotal(req *query.ListQuery) (total int64, err error)
+	GetTotal(req *query.ListQuery) (total int, err error)
 	Get(Order model.Order) (*model.Order, error)
 	Exist(Order model.Order) *model.Order
 	ExistByOrderID(id string) *model.Order
@@ -25,7 +25,7 @@ type OrderService struct {
 func (srv *OrderService) List(req *query.ListQuery) (orders []*model.Order, err error){
 	return srv.Repo.List(req)
 }
-func (srv *OrderService) GetTotal(req *query.ListQuery) (total int64, err error){
+func (srv *OrderService) GetTotal(req *query.ListQuery) (total int, err error){
 	return srv.Repo.GetTotal(req)
 }
 func (srv *OrderService) Get(order model.Order) (*model.Order, error){
@@ -53,3 +53,5 @@ func (srv *OrderService) Delete(o model.Order) (bool, error){
 	o.IsDeleted=!o.IsDeleted
 	return srv.Repo.Delete(o)
 }
+
+//zb13161658867

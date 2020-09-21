@@ -14,7 +14,7 @@ type OrderRepository struct {
 
 type OrderRepoInterface interface {
 	List(req *query.ListQuery) (Orders []*model.Order, err error)
-	GetTotal(req *query.ListQuery) (total int64, err error)
+	GetTotal(req *query.ListQuery) (total int, err error)
 	Get(Order model.Order) (*model.Order, error)
 	Exist(Order model.Order) *model.Order
 	ExistByOrderID(id string) *model.Order
@@ -27,24 +27,18 @@ type OrderRepoInterface interface {
 func (repo *OrderRepository) List(req *query.ListQuery) (order []*model.Order, err error) {
 	fmt.Println(req)
 	db := repo.DB
-	limit, offset := utils.Page(req.Limit, req.Page) // 分页
-	sort := utils.Sort(req.Sort)                     // 排序 默认 created_at desc
-	if req.Where != "" {
-		db = db.Where(req.Where)
-	}
+	limit, offset := utils.Page(req.PageSize, req.Page) // 分页
 
-	if err := db.Order(sort).Limit(limit).Offset(offset).Find(&order).Error; err != nil {
+	if err := db.Limit(limit).Offset(offset).Find(&order).Error; err != nil {
 		return nil, err
 	}
 	return order, nil
 }
 
-func (repo *OrderRepository) GetTotal(req *query.ListQuery) (total int64, err error) {
+func (repo *OrderRepository) GetTotal(req *query.ListQuery) (total int, err error) {
 	var orders []model.Order
 	db := repo.DB
-	if req.Where != "" {
-		db = db.Where(req.Where)
-	}
+
 	if err := db.Find(&orders).Count(&total).Error; err != nil {
 		return total, err
 	}

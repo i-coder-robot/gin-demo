@@ -10,7 +10,7 @@ import (
 
 type CategorySrv interface {
 	List(req *query.ListQuery) (Categories []*model.CategoryResult, err error)
-	GetTotal(req *query.ListQuery) (total int64, err error)
+	GetTotal(req *query.ListQuery) (total int, err error)
 	Get(id string) ([]*model.CategoryResult, error)
 	Exist(Category model.Category) *model.Category
 	ExistByCategoryID(id string) *model.Category
@@ -26,7 +26,7 @@ type CategoryService struct {
 func (srv *CategoryService) List(req *query.ListQuery) (categories []*model.CategoryResult, err error){
 	return srv.Repo.List(req)
 }
-func (srv *CategoryService) GetTotal(req *query.ListQuery) (total int64, err error){
+func (srv *CategoryService) GetTotal(req *query.ListQuery) (total int, err error){
 	return srv.Repo.GetTotal(req)
 }
 func (srv *CategoryService) Get(id string) ([]*model.CategoryResult, error){
@@ -116,3 +116,4 @@ func (srv *CategoryService) Delete(c model.Category) (bool, error){
 	category.IsDeleted=!category.IsDeleted
 	return srv.Repo.Delete(*category)
 }
+//zb13161658867

@@ -6,6 +6,8 @@ import (
 	"log"
 )
 
+const PAGE_SIZE int = 10
+
 type Config struct {
 	Name string
 }

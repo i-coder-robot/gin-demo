@@ -13,7 +13,7 @@ type CategoryRepository struct {
 
 type CategoryRepoInterface interface {
 	List(req *query.ListQuery) (Categorys []*model.CategoryResult, err error)
-	GetTotal(req *query.ListQuery) (total int64, err error)
+	GetTotal(req *query.ListQuery) (total int, err error)
 	Get(id string) ([]*model.CategoryResult, error)
 	Exist(Category model.Category) *model.Category
 	ExistByCategoryID(id string) *model.Category
@@ -31,7 +31,7 @@ func (repo *CategoryRepository) List(req *query.ListQuery) (categories []*model.
 	return list, nil
 }
 
-func (repo *CategoryRepository) GetTotal(req *query.ListQuery) (total int64, err error) {
+func (repo *CategoryRepository) GetTotal(req *query.ListQuery) (total int, err error) {
 	err = repo.DB.Raw("SELECT count(c3.category_id) FROM category c1 join category c2 on c1.category_id = c2.parent_id join category c3 on c2.category_id=c3.parent_id").Count(&total).Error
 	if err != nil {
 		return 0, err

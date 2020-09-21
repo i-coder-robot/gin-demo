@@ -16,6 +16,8 @@ type UserHandler struct {
 
 func (h *UserHandler) GetEntity(result model.User) resp.User{
 	return resp.User{
+		Id:result.UserId,
+		Key: result.UserId,
 		UserId :result.UserId,
 		NickName:result.NickName,
 		Mobile:result.Mobile,
@@ -80,11 +82,11 @@ func (h *UserHandler) UserListHandler(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	if q.Limit == 0 {
-		q.Limit = 5
+	if q.PageSize == 0 {
+		q.PageSize = 5
 	}
-	ret := int(total % q.Limit)
-	ret2 := int(total / q.Limit)
+	ret := int(total % q.PageSize)
+	ret2 := int(total / q.PageSize)
 	totalPage := 0
 	if ret == 0 {
 		totalPage = ret2
@@ -182,3 +184,5 @@ func (h *UserHandler) DeleteUserHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"entity": entity})
 	}
 }
+
+//zb13161658867

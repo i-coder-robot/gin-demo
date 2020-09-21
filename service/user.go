@@ -3,16 +3,18 @@ package service
 import (
 	"errors"
 	"fmt"
+	"github.com/i-coder-robot/gin-demo/config"
 	"github.com/i-coder-robot/gin-demo/model"
 	"github.com/i-coder-robot/gin-demo/query"
 	"github.com/i-coder-robot/gin-demo/repository"
 	"github.com/i-coder-robot/gin-demo/utils"
 	uuid "github.com/satori/go.uuid"
+
 )
 
 type UserSrv interface {
 	List(req *query.ListQuery) (users []*model.User, err error)
-	GetTotal(req *query.ListQuery) (total int64, err error)
+	GetTotal(req *query.ListQuery) (total int, err error)
 	Get(user model.User) (*model.User, error)
 	Exist(user model.User) *model.User
 	ExistByUserID(id string) *model.User
@@ -26,9 +28,12 @@ type UserService struct {
 }
 
 func (srv *UserService) List(req *query.ListQuery) (users []*model.User, err error) {
+	if req.PageSize <1{
+		req.PageSize =config.PAGE_SIZE
+	}
 	return srv.Repo.List(req)
 }
-func (srv *UserService) GetTotal(req *query.ListQuery) (total int64, err error) {
+func (srv *UserService) GetTotal(req *query.ListQuery) (total int, err error) {
 	return srv.Repo.GetTotal(req)
 }
 func (srv *UserService) Get(user model.User) (*model.User, error) {

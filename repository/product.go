@@ -14,7 +14,7 @@ type ProductRepository struct {
 
 type ProductRepoInterface interface {
 	List(req *query.ListQuery) (Products []*model.Product, err error)
-	GetTotal(req *query.ListQuery) (total int64, err error)
+	GetTotal(req *query.ListQuery) (total int, err error)
 	Get(Product model.Product) (*model.Product, error)
 	Exist(Product model.Product) *model.Product
 	ExistByProductID(id string) *model.Product
@@ -26,24 +26,18 @@ type ProductRepoInterface interface {
 func (repo *ProductRepository) List(req *query.ListQuery) (products []*model.Product, err error) {
 	fmt.Println(req)
 	db := repo.DB
-	limit, offset := utils.Page(req.Limit, req.Page) // 分页
-	sort := utils.Sort(req.Sort)                     // 排序 默认 created_at desc
-	if req.Where != "" {
-		db = db.Where(req.Where)
-	}
+	limit, offset := utils.Page(req.PageSize, req.Page) // 分页
 
-	if err := db.Order(sort).Limit(limit).Offset(offset).Find(&products).Error; err != nil {
+	if err := db.Limit(limit).Offset(offset).Find(&products).Error; err != nil {
 		return nil, err
 	}
 	return products, nil
 }
 
-func (repo *ProductRepository) GetTotal(req *query.ListQuery) (total int64, err error) {
+func (repo *ProductRepository) GetTotal(req *query.ListQuery) (total int, err error) {
 	var products []*model.Product
 	db := repo.DB
-	if req.Where != "" {
-		db = db.Where(req.Where)
-	}
+
 	if err := db.Find(&products).Count(&total).Error; err != nil {
 		return total, err
 	}

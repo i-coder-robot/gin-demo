@@ -10,7 +10,7 @@ import (
 
 type ProductSrv interface {
 	List(req *query.ListQuery) (Products []*model.Product, err error)
-	GetTotal(req *query.ListQuery) (total int64, err error)
+	GetTotal(req *query.ListQuery) (total int, err error)
 	Get(Product model.Product) (*model.Product, error)
 	Exist(Product model.Product) *model.Product
 	ExistByProductID(id string) *model.Product
@@ -26,7 +26,7 @@ type ProductService struct {
 func (srv *ProductService) List(req *query.ListQuery) (products []*model.Product, err error) {
 	return srv.Repo.List(req)
 }
-func (srv *ProductService) GetTotal(req *query.ListQuery) (total int64, err error) {
+func (srv *ProductService) GetTotal(req *query.ListQuery) (total int, err error) {
 	return srv.Repo.GetTotal(req)
 }
 func (srv *ProductService) Get(product model.Product) (*model.Product, error) {
@@ -66,3 +66,4 @@ func (srv *ProductService) Delete(id string) (bool, error) {
 	p.IsDeleted = !p.IsDeleted
 	return srv.Repo.Delete(*p)
 }
+//zb13161658867

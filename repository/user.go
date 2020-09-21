@@ -14,7 +14,7 @@ type UserRepository struct {
 
 type UserRepoInterface interface {
 	List(req *query.ListQuery) (users []*model.User, err error)
-	GetTotal(req *query.ListQuery) (total int64, err error)
+	GetTotal(req *query.ListQuery) (total int, err error)
 	Get(user model.User) (*model.User, error)
 	Exist(user model.User) *model.User
 	ExistByUserID(id string) *model.User
@@ -27,11 +27,7 @@ type UserRepoInterface interface {
 func (repo *UserRepository) List(req *query.ListQuery) (users []*model.User, err error) {
 	fmt.Println(req)
 	db := repo.DB
-	limit, offset := utils.Page(req.Limit, req.Page) // 分页
-	//sort := utils.Sort(req.Sort)                     // 排序 默认 created_at desc
-	if req.Where != "" {
-		db = db.Where(req.Where)
-	}
+	limit, offset := utils.Page(req.PageSize, req.Page) // 分页
 
 	if err := db.Order("id desc").Limit(limit).Offset(offset).Find(&users).Error; err != nil {
 		return nil, err
@@ -39,12 +35,10 @@ func (repo *UserRepository) List(req *query.ListQuery) (users []*model.User, err
 	return users, nil
 }
 
-func (repo *UserRepository) GetTotal(req *query.ListQuery) (total int64, err error) {
+func (repo *UserRepository) GetTotal(req *query.ListQuery) (total int, err error) {
 	var users []model.User
 	db := repo.DB
-	if req.Where != "" {
-		db = db.Where(req.Where)
-	}
+	
 	if err := db.Find(&users).Count(&total).Error; err != nil {
 		return total, err
 	}

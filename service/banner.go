@@ -9,7 +9,7 @@ import (
 
 type BannerSrv interface {
 	List(req *query.ListQuery) (Banners []*model.Banner, err error)
-	GetTotal(req *query.ListQuery) (total int64, err error)
+	GetTotal(req *query.ListQuery) (total int, err error)
 	Get(Banner model.Banner) (*model.Banner, error)
 	Exist(Banner model.Banner) *model.Banner
 	ExistByBannerID(id string) *model.Banner
@@ -25,7 +25,7 @@ type BannerService struct {
 func (srv *BannerService) List(req *query.ListQuery) (banners []*model.Banner, err error){
 	return srv.Repo.List(req)
 }
-func (srv *BannerService) GetTotal(req *query.ListQuery) (total int64, err error){
+func (srv *BannerService) GetTotal(req *query.ListQuery) (total int, err error){
 	return srv.Repo.GetTotal(req)
 }
 func (srv *BannerService) Get(banner model.Banner) (*model.Banner, error){
@@ -51,3 +51,5 @@ func (srv *BannerService) Edit(banner model.Banner) (bool, error){
 func (srv *BannerService) Delete(id string) (bool, error){
 	return srv.Repo.Delete(id)
 }
+
+//zb13161658867

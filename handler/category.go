@@ -30,18 +30,18 @@ func (h *CategoryHandler) CategoryList4BackendHandler(c *gin.Context) {
 		return
 	}
 
-	if q.Limit==0{
-		q.Limit=5
+	if q.PageSize ==0{
+		q.PageSize =5
 	}
 
 	list, err := h.CategorySrv.List(&q)
 	total, err := h.CategorySrv.GetTotal(&q)
 
 	pageTotal := 0
-	if total%q.Limit == 0 {
-		pageTotal = int(total / q.Limit)
+	if total%q.PageSize == 0 {
+		pageTotal = int(total / q.PageSize)
 	} else {
-		pageTotal = int(total/q.Limit) + 1
+		pageTotal = int(total/q.PageSize) + 1
 	}
 
 	entity = resp.Entity{
@@ -69,8 +69,8 @@ func (h *CategoryHandler) CategoryListHandler(c *gin.Context) {
 		return
 	}
 
-	if q.Limit==0{
-		q.Limit=5
+	if q.PageSize ==0{
+		q.PageSize =5
 	}
 
 	list, err := h.CategorySrv.List(&q)
@@ -79,10 +79,10 @@ func (h *CategoryHandler) CategoryListHandler(c *gin.Context) {
 	newList := h.GetEntity(list)
 
 	pageTotal := 0
-	if total%q.Limit == 0 {
-		pageTotal = int(total / q.Limit)
+	if total%q.PageSize == 0 {
+		pageTotal = int(total / q.PageSize)
 	} else {
-		pageTotal = int(total/q.Limit) + 1
+		pageTotal = int(total/q.PageSize) + 1
 	}
 
 	entity = resp.Entity{
@@ -245,3 +245,4 @@ func (h *CategoryHandler) DeleteCategoryHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"entity": entity})
 	}
 }
+//zb13161658867

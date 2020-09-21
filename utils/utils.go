@@ -8,7 +8,7 @@ import (
 )
 
 // Page 分页
-func Page(Limit, Page int64) (limit, offset int64) {
+func Page(Limit, Page int) (limit, offset int) {
 	if Limit > 0 {
 		limit = Limit
 	} else {
