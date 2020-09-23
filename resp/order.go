@@ -1,6 +1,8 @@
 package resp
 
 type Order struct {
+	Id string `json:"id"`
+	Key string `json:"key"`
 	OrderId string `json:"orderId"`
 	UserId string `json:"userId"`
 	NickName string `json:"nickName"`
@@ -13,6 +15,5 @@ type Order struct {
 	ExtraInfo string `json:"extraInfo"`
 	UserAddress string `json:"userAddress"`
 	IsDeleted bool `json:"isDeleted"`
-
 }
 
