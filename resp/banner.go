@@ -1,7 +1,9 @@
 package resp
 
 type Banner struct {
-	BannerID    string `json:"bannerID"`
+	Id string `json:"id"`
+	Key string `json:"key"`
+	BannerID    string `json:"bannerId"`
 	Url         string `json:"url"`
 	RedirectUrl string `json:"redirectUrl"`
 	OrderBy     int    `json:"order"`

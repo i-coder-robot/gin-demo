@@ -16,6 +16,8 @@ type ProductHandler struct {
 
 func (h *ProductHandler) GetEntity(result model.Product) resp.Product {
 	return resp.Product{
+		Id: result.ProductId,
+		Key: result.ProductId,
 		ProductId: result.ProductId,
 		ProductName :result.ProductName,
 		ProductIntro :result.ProductIntro,

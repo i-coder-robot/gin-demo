@@ -1,6 +1,8 @@
 package resp
 
 type Product struct {
+	Id string `json:"id"`
+	Key string `json:"key"`
 	ProductId string `json:"productId"`
 	ProductName string `json:"productName"`
 	ProductIntro string `json:"productIntro"`

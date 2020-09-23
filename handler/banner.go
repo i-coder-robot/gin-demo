@@ -16,6 +16,8 @@ type BannerHandler struct {
 
 func (h *BannerHandler) GetEntity(result model.Banner) resp.Banner{
 	return resp.Banner{
+		Id: result.BannerID,
+		Key: result.BannerID,
 		BannerID:result.BannerID,
 		Url  :result.Url,
 		RedirectUrl: result.RedirectUrl,
