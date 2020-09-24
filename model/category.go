@@ -22,6 +22,8 @@ type CategoryResult struct {
 	C2Order int  `gorm:"column:c2_order"`
 	C2ParentId string `gorm:"column:c2_parent_id"`
 
+	Key string `json:"key"`
+	Id string `json:"id"`
 	C3CategoryID string `gorm:"c3_category_id"`
 	C3Name string `gorm:"column:c3_name"`
 	C3Order int  `gorm:"column:c3_order"`

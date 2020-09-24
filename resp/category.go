@@ -20,6 +20,8 @@ type Category2 struct {
 }
 
 type Category3 struct {
+	Key string `json:"key"`
+	Id string `json:"id"`
 	CategoryID string `json:"categoryID"`
 	Name string `json:"name"`
 	Desc string `json:"desc"`

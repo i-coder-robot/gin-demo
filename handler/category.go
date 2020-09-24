@@ -37,6 +37,11 @@ func (h *CategoryHandler) CategoryList4BackendHandler(c *gin.Context) {
 	list, err := h.CategorySrv.List(&q)
 	total, err := h.CategorySrv.GetTotal(&q)
 
+	for _,item :=range list {
+		item.Key=item.C3CategoryID
+		item.Id=item.C3CategoryID
+	}
+
 	pageTotal := 0
 	if total%q.PageSize == 0 {
 		pageTotal = int(total / q.PageSize)
@@ -99,6 +104,8 @@ func (h *CategoryHandler) GetEntity(result []*model.CategoryResult) map[string]*
 	c3map :=make(map[string]*resp.Category3)
 	for _, item := range result {
 		thirdCategory := &resp.Category3{
+			Id: item.C3CategoryID,
+			Key: item.C3CategoryID,
 			CategoryID: item.C3CategoryID,
 			Name:       item.C3Name,
 			Order:      item.C3Order,
