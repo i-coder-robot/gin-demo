@@ -110,7 +110,7 @@ func (h *CategoryHandler) GetEntity(result []*model.CategoryResult) map[string]*
 			Name:       item.C3Name,
 			Order:      item.C3Order,
 			ParentID:	item.C3ParentId,
-			IsDeleted: item.C3IsDeleted,
+			IsDeleted: item.IsDeleted,
 		}
 		c3map[item.C3CategoryID] = thirdCategory
 	}
